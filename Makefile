@@ -10,3 +10,6 @@ api:
 
 web:
 	npm --prefix web run dev
+
+dev:
+	@echo "Run make api and make web in two terminals (or npm run dev after the API is up)."

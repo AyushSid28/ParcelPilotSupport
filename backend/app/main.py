@@ -1,12 +1,26 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from app.api import router
 from app.clock import SNAPSHOT
 from app.config import settings
 from app.db import connect, rebuild
+from app.paths import WEB_DIST
+from app.retrieval.ingest import persist
 
-app = FastAPI(title="ParcelPilot Support Copilot", version="0.1.0")
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    conn = rebuild()
+    persist(conn)
+    conn.close()
+    yield
+
+
+app = FastAPI(title="ParcelPilot Support Copilot", version="0.1.0", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[o.strip() for o in settings.cors_origins.split(",") if o.strip()]
@@ -16,15 +30,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 app.include_router(router)
-
-
-@app.on_event("startup")
-def startup() -> None:
-    conn = rebuild()
-    from app.retrieval.ingest import persist
-
-    persist(conn)
-    conn.close()
 
 
 @app.get("/health")
@@ -45,3 +50,7 @@ def health() -> dict:
         "tickets": tickets,
         "chunks": chunks,
     }
+
+
+if WEB_DIST.exists():
+    app.mount("/", StaticFiles(directory=WEB_DIST, html=True), name="ui")

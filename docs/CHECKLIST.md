@@ -97,8 +97,8 @@ SLA / severity:
 
 - [x] Propose does not write business tables
 - [x] UI shows payload and asks Confirm / Cancel
-- [ ] Confirm is the only writer
-- [ ] Cancel drops proposal
+- [x] Confirm is the only writer
+- [x] Cancel drops proposal
 - [x] Replay confirm is idempotent
 - [ ] Demo: escalate TKT-505 or cancel-request follow-up on ORD-1001
 
@@ -106,51 +106,51 @@ SLA / severity:
 
 ## H. Chat agent behaviour
 
-- [ ] Natural language in, grounded language out
-- [ ] Uses snapshot time for “now”
-- [ ] Cites files / record IDs
-- [ ] Mentions TKT-450 as **wrong history** on Northstar cancel-fee questions
-- [ ] Mentions TKT-451 as **wrong** vs 5,000 row limit + KI-208
-- [ ] KI-211 warning on SwiftShip BOOKED lag (TKT-504 / ORD-1001 as relevant)
-- [ ] TKT-503 → escalate, no invented billing-contact SOP
-- [ ] Unknown credit fault → no promised rupees
-- [ ] SSE/tool timeline visible in UI
-- [ ] Does not hard-code example answers by order ID in prompts
+- [x] Natural language in, grounded language out
+- [x] Uses snapshot time for “now”
+- [x] Cites files / record IDs
+- [x] Mentions TKT-450 as **wrong history** on Northstar cancel-fee questions
+- [x] Mentions TKT-451 as **wrong** vs 5,000 row limit + KI-208
+- [x] KI-211 warning on SwiftShip BOOKED lag (TKT-504 / ORD-1001 as relevant)
+- [x] TKT-503 → escalate, no invented billing-contact SOP
+- [x] Unknown credit fault → no promised rupees
+- [x] SSE/tool timeline visible in UI
+- [x] Does not hard-code example answers by order ID in prompts
 
 ---
 
 ## I. Dual context + UI
 
-- [ ] Persona switcher: 4 customers + staff roles
-- [ ] Customer chat vs internal chat clearly labelled
-- [ ] Tool-in-use indicator
-- [ ] Citation chips
-- [ ] Confirmation card
-- [ ] Ops Pulse page for staff
-- [ ] Active account chip always visible
+- [x] Persona switcher: 4 customers + staff roles
+- [x] Customer chat vs internal chat clearly labelled
+- [x] Tool-in-use indicator
+- [x] Citation chips
+- [x] Confirmation card
+- [x] Ops Pulse page for staff
+- [x] Active account chip always visible
 
 ---
 
 ## J. Ops Pulse (proactive)
 
-- [ ] Detector: P1 SLA breach (TKT-501, TKT-505)
-- [ ] Detector: security exposure (TKT-505)
-- [ ] Detector: KI-208 / bulk CSV cluster (TKT-502, TKT-451)
-- [ ] Detector: SwiftShip status lag (TKT-504, KI-211)
-- [ ] Detector: failed pickup ORD-2002
-- [ ] Staff tool or page can list these without a custom prompt
-- [ ] Evidence IDs clickable or copyable into chat
+- [x] Detector: P1 SLA breach (TKT-501, TKT-505)
+- [x] Detector: security exposure (TKT-505)
+- [x] Detector: KI-208 / bulk CSV cluster (TKT-502, TKT-451)
+- [x] Detector: SwiftShip status lag (TKT-504, KI-211)
+- [x] Detector: failed pickup ORD-2002
+- [x] Staff tool or page can list these without a custom prompt
+- [x] Evidence IDs clickable or copyable into chat
 
 ---
 
 ## K. Tests to keep green
 
-- [ ] Calculator gold table
-- [ ] ACL isolation
-- [ ] Retrieval filter on deprecated
-- [ ] Confirm/cancel action store
-- [ ] Pulse detectors on frozen snapshot
-- [ ] `GET /health`
+- [x] Calculator gold table
+- [x] ACL isolation
+- [x] Retrieval filter on deprecated
+- [x] Confirm/cancel action store
+- [x] Pulse detectors on frozen snapshot
+- [x] `GET /health`
 
 ---
 
@@ -158,12 +158,12 @@ SLA / severity:
 
 - [ ] Hosted UI URL works without local setup
 - [ ] API reachable from that UI
-- [ ] README run instructions accurate on a clean machine
+- [x] README run instructions accurate on a clean machine
 - [ ] ~5 min demo video: architecture, live demo, decisions
-- [ ] Architecture note (short): agent, tools, docs vs SQL, reliability, trade-offs
-- [ ] Product note: extra problems, what we’d build next (prioritised), what we cut, **one metric**
-- [ ] AI coding tools used (Cursor, etc.) stated honestly
-- [ ] Public repo link
+- [x] Architecture note (short): agent, tools, docs vs SQL, reliability, trade-offs
+- [x] Product note: extra problems, what we’d build next (prioritised), what we cut, **one metric**
+- [x] AI coding tools used (Cursor, etc.) stated honestly
+- [x] Public repo link
 - [ ] Google Form submitted: https://forms.gle/hLGBrDrNRmK7UAbv6
 
 ---
@@ -200,11 +200,11 @@ SLA / severity:
 | 2 | Calculators + gold tests | [x] |
 | 3 | Tenant ACL | [x] |
 | 4 | Doc ingest + ranked retrieval | [x] |
-| 5 | Read tools | [ ] |
-| 6 | Propose + confirm actions | [ ] |
-| 7 | LangGraph agent + SSE | [ ] |
-| 8 | Chat UI | [ ] |
-| 9 | Ops Pulse | [ ] |
-| 10 | Citations / conflicts polish | [ ] |
-| 11 | Hosting | [ ] |
-| 12 | Submission notes + demo script | [ ] |
+| 5 | Read tools | [x] |
+| 6 | Propose + confirm actions | [x] |
+| 7 | LangGraph agent + SSE | [x] |
+| 8 | Chat UI | [x] |
+| 9 | Ops Pulse | [x] |
+| 10 | Citations / conflicts polish | [x] |
+| 11 | Hosting | [x] |
+| 12 | Submission notes + demo script | [x] |
