@@ -22,3 +22,4 @@ def test_health_and_pulse():
             headers={"X-Actor-Type": "customer", "X-Account-Id": "ACCT-001"},
         ).json()
         assert {o["order_id"] for o in hidden["orders"]} == {"ORD-1001", "ORD-1002"}
+        assert hidden["orders"][0]["account_name"] == "Northstar Logistics"

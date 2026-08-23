@@ -43,7 +43,12 @@ const TOOL_LINE = {
   propose_ticket_update: "Preparing a ticket update…",
 };
 
-function statusLine(tools) {
+function ticketRank(t) {
+  const s = `${t.subject} ${t.description || ""}`.toLowerCase();
+  if (s.includes("api key") || s.includes("credential") || s.includes("all shipment")) return 0;
+  if (s.includes("bulk") || s.includes("booked")) return 1;
+  return 2;
+}
   const last = [...tools].reverse().find((t) => t.state === "running") || tools[tools.length - 1];
   if (!last) return "Working…";
   return TOOL_LINE[last.name] || "Working…";
@@ -197,27 +202,52 @@ export default function App() {
             </button>
           </div>
         )}
-        <h2>Visible records</h2>
-        <ul className="records">
-          {orders.map((o) => (
-            <li key={o.order_id}>
-              <button onClick={() => send(`Look up ${o.order_id} and tell me the cancellation and credit position.`)}>
-                {o.order_id} · {o.status}
-              </button>
-            </li>
-          ))}
-        </ul>
-        <ul className="records">
-          {tickets
-            .filter((t) => t.status === "open")
-            .map((t) => (
-              <li key={t.ticket_id}>
-                <button onClick={() => send(`Investigate ${t.ticket_id}: ${t.subject}`)}>
-                  {t.ticket_id} · {t.subject}
-                </button>
-              </li>
-            ))}
-        </ul>
+        {staff ? (
+          <>
+            <h2>Open tickets</h2>
+            <p className="aside-hint">Open queue across accounts. Look up any order ID in chat.</p>
+            <ul className="records">
+              {[...tickets]
+                .filter((t) => t.status === "open")
+                .sort((a, b) => ticketRank(a) - ticketRank(b) || a.ticket_id.localeCompare(b.ticket_id))
+                .map((t) => (
+                  <li key={t.ticket_id}>
+                    <button onClick={() => send(`Investigate ${t.ticket_id}: ${t.subject}`)}>
+                      <b>{t.ticket_id}</b>
+                      <span>
+                        {t.account_name} · {t.subject}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            <h2>Your shipments</h2>
+            <ul className="records">
+              {orders.map((o) => (
+                <li key={o.order_id}>
+                  <button onClick={() => send(`Look up ${o.order_id} and tell me the cancellation and credit position.`)}>
+                    {o.order_id} · {o.status}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <h2>Open tickets</h2>
+            <ul className="records">
+              {tickets
+                .filter((t) => t.status === "open")
+                .map((t) => (
+                  <li key={t.ticket_id}>
+                    <button onClick={() => send(`Investigate ${t.ticket_id}: ${t.subject}`)}>
+                      {t.ticket_id} · {t.subject}
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </>
+        )}
       </aside>
 
       <main>
@@ -234,7 +264,7 @@ export default function App() {
             <div className="log" ref={logRef}>
               {messages.length === 0 && (
                 <div className="empty">
-                  <p>Starters for this login. Left rail lists the orders you can actually see.</p>
+                  <p>Try a starter, or pick a record on the left.</p>
                   {starters.map((s) => (
                     <button key={s} className="ghost" onClick={() => send(s)}>
                       {s}

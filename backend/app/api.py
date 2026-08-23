@@ -64,7 +64,14 @@ def me(actor: Actor = Depends(actor_from_headers)) -> dict:
 def orders(actor: Actor = Depends(actor_from_headers)) -> dict:
     conn = connect()
     try:
-        return {"orders": [_public_order(o) for o in Store(conn).orders(actor)]}
+        store = Store(conn)
+        names = {a.account_id: a.account_name for a in store.accounts(actor)}
+        out = []
+        for o in store.orders(actor):
+            row = _public_order(o)
+            row["account_name"] = names.get(o.account_id, o.account_id)
+            out.append(row)
+        return {"orders": out}
     finally:
         conn.close()
 
@@ -73,7 +80,14 @@ def orders(actor: Actor = Depends(actor_from_headers)) -> dict:
 def tickets(actor: Actor = Depends(actor_from_headers)) -> dict:
     conn = connect()
     try:
-        return {"tickets": [_public_ticket(t) for t in Store(conn).tickets(actor)]}
+        store = Store(conn)
+        names = {a.account_id: a.account_name for a in store.accounts(actor)}
+        out = []
+        for t in store.tickets(actor):
+            row = _public_ticket(t)
+            row["account_name"] = names.get(t.account_id, t.account_id)
+            out.append(row)
+        return {"tickets": out}
     finally:
         conn.close()
 

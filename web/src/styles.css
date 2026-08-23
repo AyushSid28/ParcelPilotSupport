@@ -61,16 +61,22 @@ select, input {
 .tabs button.on { background: var(--ink); color: var(--paper); }
 
 .records { list-style: none; padding: 0; margin: 0; }
+.aside-hint { font-size: 0.75rem; color: var(--muted); line-height: 1.35; margin: 0 0 0.5rem; }
 .records button {
   width: 100%;
   text-align: left;
   background: none;
   border: 0;
   border-bottom: 1px solid var(--line);
-  padding: 0.4rem 0;
+  padding: 0.45rem 0;
   cursor: pointer;
   font-size: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
+.records button b { font-weight: 600; }
+.records button span { color: var(--muted); font-size: 0.78rem; }
 
 main { display: flex; flex-direction: column; min-width: 0; }
 .log { flex: 1; overflow: auto; padding: 1.5rem 2rem; }
