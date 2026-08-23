@@ -26,8 +26,25 @@ Rules:
 - Do not promise a credit if the tool says uncertain.
 - Never use deprecated policy v2.
 - "Can I cancel?" is not a request to cancel. Only propose_* if they ask you to actually do it.
+- If they reply yes / go ahead after you offered return-to-origin, call propose_task titled for return-to-origin on that order id, then wait for the confirm card.
 - If a tool returns not_found for a customer, say it is not on this account.
 """
+
+
+def _for_model(messages: list[dict]) -> list[dict]:
+    """Drop UI-only fields. Groq/OpenAI reject unknown keys like `sources`."""
+    out = []
+    for raw in messages:
+        role = raw.get("role")
+        if role not in {"user", "assistant", "system", "tool"}:
+            continue
+        item = {"role": role, "content": raw.get("content") or ""}
+        if raw.get("tool_calls"):
+            item["tool_calls"] = raw["tool_calls"]
+        if raw.get("tool_call_id"):
+            item["tool_call_id"] = raw["tool_call_id"]
+        out.append(item)
+    return out
 
 
 def _client() -> OpenAI:
@@ -43,7 +60,7 @@ def iter_chat(messages: list[dict], actor: Actor, conn) -> Iterator[dict]:
         return
 
     client = _client()
-    work = [{"role": "system", "content": SYSTEM}, *messages]
+    work = [{"role": "system", "content": SYSTEM}, *_for_model(messages)]
     for _ in range(8):
         try:
             resp = client.chat.completions.create(
@@ -51,8 +68,11 @@ def iter_chat(messages: list[dict], actor: Actor, conn) -> Iterator[dict]:
                 messages=work,
                 tools=SCHEMAS,
             )
-        except Exception as exc:
-            yield {"event": "error", "data": {"message": str(exc)}}
+        except Exception:
+            yield {
+                "event": "error",
+                "data": {"message": "I couldn't complete that just now. Please send your last message again."},
+            }
             return
         choice = resp.choices[0]
         msg = choice.message

@@ -107,7 +107,10 @@ export default function App() {
     let final = "";
     let sources = [];
     try {
-      for await (const ev of streamChat(persona, next)) {
+      for await (const ev of streamChat(
+        persona,
+        next.map(({ role, content }) => ({ role, content })),
+      )) {
         if (ev.event === "tool_start") setTools((t) => [...t, { name: ev.data.name, state: "running" }]);
         if (ev.event === "tool_end") {
           setTools((t) => t.map((x) => (x.name === ev.data.name && x.state === "running" ? { ...x, state: "done" } : x)));
