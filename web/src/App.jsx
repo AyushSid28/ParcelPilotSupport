@@ -215,6 +215,7 @@ export default function App() {
                   ))}
                 </p>
               )}
+              {proposal && (
                 <div className="confirm">
                   <p>This will {proposal.action_type}. It has not been written yet.</p>
                   <pre>{JSON.stringify(proposal.payload, null, 2)}</pre>
