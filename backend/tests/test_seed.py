@@ -1,15 +1,4 @@
-import pytest
-
 from app.clock import SNAPSHOT
-from app.db import rebuild
-
-
-@pytest.fixture()
-def db(tmp_path):
-    path = tmp_path / "test.db"
-    conn = rebuild(path)
-    yield conn
-    conn.close()
 
 
 def test_seed_counts(db):

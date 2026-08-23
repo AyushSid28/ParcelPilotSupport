@@ -31,31 +31,31 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 Cancellation:
 
-- [ ] ORD-1001 → allowed, fee **0**, basis includes Northstar agreement
-- [ ] ORD-1002 → not allowed, RTO
-- [ ] ORD-2001 → allowed, fee **250**
-- [ ] ORD-3001 → allowed, fee **0** (within 30 min)
-- [ ] ORD-4001 → not allowed (DELIVERED)
-- [ ] DRAFT path covered (even if unused in xlsx)
-- [ ] Calculator does **not** special-case order IDs; uses status + account contract + times
+- [x] ORD-1001 → allowed, fee **0**, basis includes Northstar agreement
+- [x] ORD-1002 → not allowed, RTO
+- [x] ORD-2001 → allowed, fee **250**
+- [x] ORD-3001 → allowed, fee **0** (within 30 min)
+- [x] ORD-4001 → not allowed (DELIVERED)
+- [x] DRAFT path covered (even if unused in xlsx)
+- [x] Calculator does **not** special-case order IDs; uses status + account contract + times
 
 Service credit:
 
-- [ ] ORD-2002 → eligible, amount **300** (LumenWorks >4h fixed)
-- [ ] Default formula min(500, 10% fee) used when no LumenWorks clause
-- [ ] Unknown carrier fault → no promise, `uncertain`
-- [ ] Customer fault → ineligible
-- [ ] Amount > 1000 → manager approval flag
-- [ ] Northstar monthly cap 5000 considered
+- [x] ORD-2002 → eligible, amount **300** (LumenWorks >4h fixed)
+- [x] Default formula min(500, 10% fee) used when no LumenWorks clause
+- [x] Unknown carrier fault → no promise, `uncertain`
+- [x] Customer fault → ineligible
+- [x] Amount > 1000 → manager approval flag
+- [x] Northstar monthly cap 5000 considered
 
 SLA / severity:
 
-- [ ] TKT-501 → P1, Northstar 15 min, **breached** at snapshot
-- [ ] TKT-505 → P1 security, Enterprise 30 min, **breached**
-- [ ] TKT-502 → P2 (workaround exists), Growth 4 business hours, not necessarily breached
-- [ ] TKT-503 → P3
-- [ ] Axis Labs uses v3 Enterprise targets (no custom agreement)
-- [ ] v2 targets never used in calculator
+- [x] TKT-501 → P1, Northstar 15 min, **breached** at snapshot
+- [x] TKT-505 → P1 security, Enterprise 30 min, **breached**
+- [x] TKT-502 → P2 (workaround exists), Growth 4 business hours, not necessarily breached
+- [x] TKT-503 → P3
+- [x] Axis Labs uses v3 Enterprise targets (no custom agreement)
+- [x] v2 targets never used in calculator
 
 ---
 
@@ -197,7 +197,7 @@ SLA / severity:
 |---|---|---|
 | 0 | Repo skeleton + docs + source pack | [x] |
 | 1 | SQLite load + health | [x] |
-| 2 | Calculators + gold tests | [ ] |
+| 2 | Calculators + gold tests | [x] |
 | 3 | Tenant ACL | [ ] |
 | 4 | Doc ingest + ranked retrieval | [ ] |
 | 5 | Read tools | [ ] |
