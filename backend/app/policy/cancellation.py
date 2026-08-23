@@ -54,7 +54,7 @@ def assess_cancellation(
             False,
             0,
             ["STATUS_PICKED_UP"],
-            basis + [PRODUCT],
+            basis,
             next_step="return_to_origin",
             requires_confirmation=False,
         )

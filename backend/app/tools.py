@@ -93,7 +93,7 @@ SCHEMAS = [
         "type": "function",
         "function": {
             "name": "assess_cancellation",
-            "description": "Apply SOP + contract to decide if an order can be cancelled and the fee.",
+            "description": "Look up the order and decide cancel/fee using SOP + the customer's contract. Call this alone for cancellation questions. Do not also call get_order, get_account, or search_documents.",
             "parameters": {
                 "type": "object",
                 "properties": {"order_id": {"type": "string"}},
@@ -105,7 +105,7 @@ SCHEMAS = [
         "type": "function",
         "function": {
             "name": "assess_failed_pickup_credit",
-            "description": "Apply SOP + contract to failed-pickup service credits.",
+            "description": "Look up the order and decide failed-pickup credit using SOP + contract. Call this alone for credit questions. Do not also call get_order or search_documents.",
             "parameters": {
                 "type": "object",
                 "properties": {"order_id": {"type": "string"}},

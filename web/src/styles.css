@@ -89,14 +89,7 @@ article pre {
   line-height: 1.45;
 }
 
-.tools { display: flex; flex-wrap: wrap; gap: 0.4rem; padding: 0; list-style: none; }
-.tools li {
-  font-size: 0.75rem;
-  padding: 0.15rem 0.45rem;
-  border: 1px solid var(--line);
-  font-family: ui-monospace, Menlo, monospace;
-}
-.tools li[data-state="running"] { border-color: var(--accent); }
+.working { color: var(--muted); font-size: 0.9rem; margin: 0.4rem 0 0; }
 
 .confirm {
   max-width: 40rem;

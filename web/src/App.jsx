@@ -29,6 +29,26 @@ const STARTERS = {
   ],
 };
 
+const TOOL_LINE = {
+  assess_cancellation: "Checking cancellation rules…",
+  assess_failed_pickup_credit: "Checking service credit…",
+  classify_severity_and_sla: "Checking SLA…",
+  get_ops_pulse: "Scanning open issues…",
+  search_documents: "Reading policy…",
+  get_order: "Looking up the shipment…",
+  get_account: "Looking up the account…",
+  get_ticket: "Looking up the ticket…",
+  propose_escalation: "Preparing an escalation…",
+  propose_task: "Preparing a task…",
+  propose_ticket_update: "Preparing a ticket update…",
+};
+
+function statusLine(tools) {
+  const last = [...tools].reverse().find((t) => t.state === "running") || tools[tools.length - 1];
+  if (!last) return "Working…";
+  return TOOL_LINE[last.name] || "Working…";
+}
+
 export default function App() {
   const [personas, setPersonas] = useState([]);
   const [persona, setPersona] = useState(null);
@@ -92,10 +112,7 @@ export default function App() {
         if (ev.event === "tool_end") {
           setTools((t) => t.map((x) => (x.name === ev.data.name && x.state === "running" ? { ...x, state: "done" } : x)));
           const result = ev.data.result || {};
-          const extra = [
-            ...(result.policy_basis || []),
-            ...((result.hits || []).map((h) => h.filename)),
-          ].filter(Boolean);
+          const extra = (result.policy_basis || []).filter(Boolean);
           if (extra.length) {
             sources = [...new Set([...sources, ...extra])];
           }
@@ -211,7 +228,7 @@ export default function App() {
                 <article key={i} className={m.role}>
                   <span>{m.role === "user" ? "You" : "Answer"}</span>
                   <pre>{m.content}</pre>
-                  {m.sources?.length > 0 && (
+                  {m.sources?.length > 0 && staff && (
                     <p className="cites">
                       <em>Sources</em>
                       {m.sources.map((c) => (
@@ -221,15 +238,7 @@ export default function App() {
                   )}
                 </article>
               ))}
-              {busy && tools.length > 0 && (
-                <ol className="tools">
-                  {tools.map((t, i) => (
-                    <li key={i} data-state={t.state}>
-                      {t.name}
-                    </li>
-                  ))}
-                </ol>
-              )}
+              {busy && <p className="working">{statusLine(tools)}</p>}
               {proposal && (
                 <div className="confirm">
                   <p>
