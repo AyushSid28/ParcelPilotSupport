@@ -49,6 +49,8 @@ function ticketRank(t) {
   if (s.includes("bulk") || s.includes("booked")) return 1;
   return 2;
 }
+
+function statusLine(tools) {
   const last = [...tools].reverse().find((t) => t.state === "running") || tools[tools.length - 1];
   if (!last) return "Working…";
   return TOOL_LINE[last.name] || "Working…";
@@ -110,7 +112,6 @@ export default function App() {
     setError("");
     setTools([]);
     let final = "";
-    let sources = [];
     try {
       for await (const ev of streamChat(
         persona,
@@ -119,18 +120,13 @@ export default function App() {
         if (ev.event === "tool_start") setTools((t) => [...t, { name: ev.data.name, state: "running" }]);
         if (ev.event === "tool_end") {
           setTools((t) => t.map((x) => (x.name === ev.data.name && x.state === "running" ? { ...x, state: "done" } : x)));
-          const result = ev.data.result || {};
-          const extra = (result.policy_basis || []).filter(Boolean);
-          if (extra.length) {
-            sources = [...new Set([...sources, ...extra])];
-          }
         }
         if (ev.event === "proposal") setProposal(ev.data);
         if (ev.event === "final") final = ev.data.text;
         if (ev.event === "error") setError(ev.data.message);
       }
       if (final) {
-        setMessages([...next, { role: "assistant", content: final, sources }]);
+        setMessages([...next, { role: "assistant", content: final }]);
       }
     } catch (e) {
       setError(String(e));
@@ -142,7 +138,11 @@ export default function App() {
   async function onConfirm() {
     if (!proposal) return;
     const out = await confirmAction(persona, proposal.proposal_id);
-    const title = proposal.payload?.title || proposal.action_type;
+    const title =
+      proposal.payload?.title ||
+      (proposal.action_type === "escalation"
+        ? `Escalation for ${proposal.payload?.ticket_id || "this ticket"}`
+        : proposal.action_type);
     setProposal(null);
     if (out?.error) {
       setMessages((m) => [
@@ -153,10 +153,7 @@ export default function App() {
     }
     setMessages((m) => [
       ...m,
-      {
-        role: "assistant",
-        content: `Done. I’ve logged “${title}” for the ops team.`,
-      },
+      { role: "assistant", content: `Done. ${title} is in the queue.` },
     ]);
   }
 
@@ -212,7 +209,7 @@ export default function App() {
                 .sort((a, b) => ticketRank(a) - ticketRank(b) || a.ticket_id.localeCompare(b.ticket_id))
                 .map((t) => (
                   <li key={t.ticket_id}>
-                    <button onClick={() => send(`Investigate ${t.ticket_id}: ${t.subject}`)}>
+                    <button onClick={() => send(`What's the status of ${t.ticket_id}?`)}>
                       <b>{t.ticket_id}</b>
                       <span>
                         {t.account_name} · {t.subject}
@@ -240,7 +237,7 @@ export default function App() {
                 .filter((t) => t.status === "open")
                 .map((t) => (
                   <li key={t.ticket_id}>
-                    <button onClick={() => send(`Investigate ${t.ticket_id}: ${t.subject}`)}>
+                    <button onClick={() => send(`What's the status of ${t.ticket_id}?`)}>
                       {t.ticket_id} · {t.subject}
                     </button>
                   </li>
@@ -276,14 +273,6 @@ export default function App() {
                 <article key={i} className={m.role}>
                   <span>{m.role === "user" ? "You" : "Answer"}</span>
                   <pre>{m.content}</pre>
-                  {m.sources?.length > 0 && staff && (
-                    <p className="cites">
-                      <em>Sources</em>
-                      {m.sources.map((c) => (
-                        <span key={c}>{c.replace(/\.pdf$/i, "").replace(/_/g, " ")}</span>
-                      ))}
-                    </p>
-                  )}
                 </article>
               ))}
               {busy && <p className="working">{statusLine(tools)}</p>}
@@ -342,7 +331,7 @@ function Pulse({ issues, onAsk }) {
           </header>
           <p>{i.title}</p>
           <p className="meta">{i.evidence_ids.join(" · ")}</p>
-          <button className="ghost" onClick={() => onAsk(`Investigate: ${i.title}. Evidence: ${i.evidence_ids.join(", ")}`)}>
+          <button className="ghost" onClick={() => onAsk(`What's the status of ${i.evidence_ids[0]}?`)}>
             Open in chat
           </button>
         </article>
