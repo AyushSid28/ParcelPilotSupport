@@ -84,22 +84,22 @@ SLA / severity:
 
 ## F. Agent tools (minimum three classes)
 
-- [ ] `search_documents`
-- [ ] Structured lookup (`get_order` / `get_ticket` / `get_account` / lists)
-- [ ] Structured calculate (`assess_cancellation` / `assess_failed_pickup_credit` / `classify_severity_and_sla`)
-- [ ] State-changing **propose** tools (escalation, ticket update, task) — at least one wired, three preferred
-- [ ] Tools return structured errors (`not_found`, `forbidden` never for customers — use not_found)
-- [ ] Agent can chain: order → account → agreement → SOP → calculate → propose
+- [x] `search_documents`
+- [x] Structured lookup (`get_order` / `get_ticket` / `get_account` / lists)
+- [x] Structured calculate (`assess_cancellation` / `assess_failed_pickup_credit` / `classify_severity_and_sla`)
+- [x] State-changing **propose** tools (escalation, ticket update, task) — at least one wired, three preferred
+- [x] Tools return structured errors (`not_found`, `forbidden` never for customers — use not_found)
+- [x] Agent can chain: order → account → agreement → SOP → calculate → propose
 
 ---
 
 ## G. Confirmation before actions
 
-- [ ] Propose does not write business tables
-- [ ] UI shows payload and asks Confirm / Cancel
+- [x] Propose does not write business tables
+- [x] UI shows payload and asks Confirm / Cancel
 - [ ] Confirm is the only writer
 - [ ] Cancel drops proposal
-- [ ] Replay confirm is idempotent
+- [x] Replay confirm is idempotent
 - [ ] Demo: escalate TKT-505 or cancel-request follow-up on ORD-1001
 
 ---
