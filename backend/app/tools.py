@@ -44,7 +44,7 @@ SCHEMAS = [
         "type": "function",
         "function": {
             "name": "get_order",
-            "description": "Load a shipment/order by id.",
+            "description": "Load a shipment/order by id. Call this for 'what's the status of ORD-…' questions.",
             "parameters": {
                 "type": "object",
                 "properties": {"order_id": {"type": "string"}},

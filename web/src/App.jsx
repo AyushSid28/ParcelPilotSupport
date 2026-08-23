@@ -50,6 +50,42 @@ function ticketRank(t) {
   return 2;
 }
 
+function doneCopy(proposal) {
+  const payload = proposal?.payload || {};
+  const title = String(payload.title || "");
+  const low = title.toLowerCase();
+  const order = payload.related_id || title.match(/ORD-\d+/)?.[0];
+  const ticket = payload.ticket_id || title.match(/TKT-\d+/)?.[0];
+  if (proposal?.action_type === "escalation") {
+    return ticket
+      ? `Done. Escalation for ${ticket} is in the queue.`
+      : "Done. The escalation is in the queue.";
+  }
+  if (proposal?.action_type === "ticket_update") {
+    return ticket
+      ? `Done. Update for ${ticket} is in the queue.`
+      : "Done. The ticket update is in the queue.";
+  }
+  if (low.includes("cancel") && order) {
+    const charged = /₹\s*250|\b250\b/.test(title) && !/no fee|without/.test(low);
+    return charged
+      ? `Done. Cancellation for ${order} is in the queue. The ₹250 fee will apply.`
+      : `Done. Cancellation for ${order} is in the queue. No fee.`;
+  }
+  if (low.includes("credit")) {
+    const amt = title.match(/₹\s*[\d,]+/)?.[0];
+    if (amt && order) return `Done. ${amt} credit for ${order} is in the queue.`;
+    if (amt) return `Done. ${amt} credit is in the queue.`;
+    return "Done. The credit is in the queue.";
+  }
+  if (/rto|return.to.origin/.test(low)) {
+    return order
+      ? `Done. Return-to-origin for ${order} is in the queue.`
+      : "Done. Return-to-origin is in the queue.";
+  }
+  return "Done. That's in the queue.";
+}
+
 function statusLine(tools) {
   const last = [...tools].reverse().find((t) => t.state === "running") || tools[tools.length - 1];
   if (!last) return "Working…";
@@ -138,11 +174,7 @@ export default function App() {
   async function onConfirm() {
     if (!proposal) return;
     const out = await confirmAction(persona, proposal.proposal_id);
-    const title =
-      proposal.payload?.title ||
-      (proposal.action_type === "escalation"
-        ? `Escalation for ${proposal.payload?.ticket_id || "this ticket"}`
-        : proposal.action_type);
+    const line = doneCopy(proposal);
     setProposal(null);
     if (out?.error) {
       setMessages((m) => [
@@ -151,10 +183,7 @@ export default function App() {
       ]);
       return;
     }
-    setMessages((m) => [
-      ...m,
-      { role: "assistant", content: `Done. ${title} is in the queue.` },
-    ]);
+    setMessages((m) => [...m, { role: "assistant", content: line }]);
   }
 
   async function onCancel() {
