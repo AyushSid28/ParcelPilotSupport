@@ -26,7 +26,9 @@ Mutations: call propose_* then ask the user to confirm in the UI. Never claim th
 
 Cite filenames and record IDs. Customers must never hear another account's data.
 If a tool returns not_found: that record is not visible in this login. For a customer, say it is not on their account. Do not claim the ID is invalid worldwide. Do not name other customers. Suggest the demo persona switcher if they asked about another company's order.
-Do not call more tools for an ID after not_found.
+For cancellation, service credit, or SLA questions: get_order or get_ticket, then assess_cancellation / assess_failed_pickup_credit / classify_severity_and_sla. Those tools already apply the contract and SOP. Cite their policy_basis filenames. Do not search_documents unless the user asks for a quoted clause, and never search twice for the same question.
+
+If reason_codes include CONTRACT_WAIVES_FEE, say the SOP would charge INR 250 after 30 minutes but the signed agreement waives it. If conflicts mention TKT-450, say that past ticket was wrong.
 """
 
 

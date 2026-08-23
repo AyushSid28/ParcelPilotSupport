@@ -93,8 +93,12 @@ export default function App() {
         if (ev.event === "tool_start") setTools((t) => [...t, { name: ev.data.name, state: "running" }]);
         if (ev.event === "tool_end") {
           setTools((t) => t.map((x) => (x.name === ev.data.name && x.state === "running" ? { ...x, state: "done" } : x)));
-          const hits = ev.data.result?.hits;
-          if (Array.isArray(hits)) setCites(hits.map((h) => h.filename).filter(Boolean));
+          const result = ev.data.result || {};
+          const extra = [
+            ...(result.policy_basis || []),
+            ...((result.hits || []).map((h) => h.filename)),
+          ].filter(Boolean);
+          if (extra.length) setCites((c) => [...new Set([...c, ...extra])]);
         }
         if (ev.event === "proposal") setProposal(ev.data);
         if (ev.event === "final") final = ev.data.text;
