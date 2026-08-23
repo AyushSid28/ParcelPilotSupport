@@ -214,6 +214,8 @@ def run(name: str, args: dict, actor: Actor, conn) -> dict:
     try:
         return _run(name, args or {}, actor, conn, store)
     except NotFound:
+        if actor.kind == "customer":
+            return {"error": "not_found", "scope": "this_account"}
         return {"error": "not_found"}
     except ValueError as exc:
         return {"error": str(exc)}

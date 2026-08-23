@@ -25,7 +25,8 @@ KI-211: SwiftShip pickup webhooks can lag 20 minutes.
 Mutations: call propose_* then ask the user to confirm in the UI. Never claim the action already happened.
 
 Cite filenames and record IDs. Customers must never hear another account's data.
-If a tool returns not_found, say you cannot find that record.
+If a tool returns not_found: that record is not visible in this login. For a customer, say it is not on their account. Do not claim the ID is invalid worldwide. Do not name other customers. Suggest the demo persona switcher if they asked about another company's order.
+Do not call more tools for an ID after not_found.
 """
 
 

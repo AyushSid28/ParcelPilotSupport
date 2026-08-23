@@ -10,7 +10,7 @@ def test_tools_respect_acl(db):
     persist(db)
     customer = parse_actor("customer", "ACCT-001", None, None)
     hidden = run("get_order", {"order_id": "ORD-2001"}, customer, db)
-    assert hidden == {"error": "not_found"}
+    assert hidden == {"error": "not_found", "scope": "this_account"}
     own = run("get_order", {"order_id": "ORD-1001"}, customer, db)
     assert own["order_id"] == "ORD-1001"
 

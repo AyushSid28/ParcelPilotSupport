@@ -11,15 +11,20 @@ import {
 } from "./api";
 
 const STARTERS = {
-  customer: [
+  "ACCT-001": [
     "Can I cancel ORD-1001 without a fee? Explain why.",
-    "Pickup is late on ORD-2002 and the carrier accepted fault. Credit?",
-    "Can I cancel ORD-2001 without a fee?",
+    "Can we cancel ORD-1002?",
   ],
+  "ACCT-002": [
+    "Can I cancel ORD-2001 without a fee?",
+    "Pickup is late on ORD-2002 and the carrier accepted fault. Credit?",
+  ],
+  "ACCT-003": ["Can I cancel ORD-3001? Any fee?", "How do we change the billing contact?"],
+  "ACCT-004": ["Can I cancel ORD-4001?", "We may have exposed an API key. What should we do?"],
   staff: [
     "What needs attention right now?",
     "TKT-505 — have we breached SLA?",
-    "Bulk upload failing on a 4,200-row CSV. Plan limit or known issue?",
+    "Can LumenWorks cancel ORD-2001 without a fee?",
     "Beacon wants to change the billing contact.",
   ],
 };
@@ -67,7 +72,10 @@ export default function App() {
   }, [messages, tools]);
 
   const staff = persona?.kind === "staff";
-  const starters = useMemo(() => (staff ? STARTERS.staff : STARTERS.customer), [staff]);
+  const starters = useMemo(() => {
+    if (staff) return STARTERS.staff;
+    return STARTERS[persona?.account_id] || [];
+  }, [staff, persona]);
 
   async function send(text) {
     const content = (text ?? draft).trim();
@@ -185,7 +193,7 @@ export default function App() {
             <div className="log" ref={logRef}>
               {messages.length === 0 && (
                 <div className="empty">
-                  <p>Ask from the pack. Starters:</p>
+                  <p>Starters for this login. Left rail lists the orders you can actually see.</p>
                   {starters.map((s) => (
                     <button key={s} className="ghost" onClick={() => send(s)}>
                       {s}
