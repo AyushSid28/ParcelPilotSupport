@@ -8,9 +8,9 @@ Clock for every time question: **2026-08-16 11:00 Asia/Kolkata**.
 
 ## Try the hosted demo
 
-No clone, no Docker. Open the deployed URL and use the persona dropdown.
+No clone, no Docker. Open [https://parcelpilotsupport.onrender.com](https://parcelpilotsupport.onrender.com) and use the persona dropdown.
 
-*(Paste the Render URL here after the first deploy.)*
+Free Render sleeps when idle; the first load after a nap can take about a minute.
 
 ## Run from source
 
@@ -50,7 +50,7 @@ Host on Render as a **Python** web service, not a Docker runtime. Testers never 
 1. [dashboard.render.com](https://dashboard.render.com) → **New → Blueprint** (this `render.yaml`) or **Web Service** on `AyushSid28/ParcelPilotSupport`.
 2. Runtime **Python**. Build `bash scripts/render-build.sh`. Start `bash scripts/render-start.sh`. Health `/health`.
 3. Env: `GROQ_API_KEY` from local `.env`. Optional `GROQ_MODEL=openai/gpt-oss-120b`.
-4. Put the `https://….onrender.com` URL in this README and in the submission form.
+4. Live URL: [https://parcelpilotsupport.onrender.com](https://parcelpilotsupport.onrender.com)
 
 Free instances sleep when idle; the first request after a nap can take a minute.
 
