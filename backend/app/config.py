@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     openai_model: str = ""
     api_host: str = "0.0.0.0"
     api_port: int = 8000
-    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    cors_origins: str = "*"
 
     @property
     def llm_key(self) -> str:

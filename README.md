@@ -33,6 +33,17 @@ docker build -t parcelpilot .
 docker run -p 8000:8000 -e GROQ_API_KEY=... parcelpilot
 ```
 
+## Host on Render
+
+Yes — Render is the right host for this. One Docker service serves the UI and API on the same URL. Docker on Render needs the **Starter** plan (free instances cannot run Docker).
+
+1. [dashboard.render.com](https://dashboard.render.com) → **New → Web Service** → `AyushSid28/ParcelPilotSupport`.
+2. Runtime **Docker**, health check `/health`.
+3. Env: `GROQ_API_KEY` (from your local `.env`). Optional `GROQ_MODEL=openai/gpt-oss-120b`.
+4. Deploy, then use `https://<name>.onrender.com` in the submission form.
+
+Or apply `render.yaml` via **New → Blueprint**. First boot can take a few minutes while the image builds.
+
 ## What to try
 
 - Northstar: cancel ORD-1001 (should be free; ignore TKT-450)
