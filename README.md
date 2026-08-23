@@ -6,13 +6,19 @@ Public repo: https://github.com/AyushSid28/ParcelPilotSupport
 
 Clock for every time question: **2026-08-16 11:00 Asia/Kolkata**.
 
-## Run locally
+## Try the hosted demo
+
+No clone, no Docker. Open the deployed URL and use the persona dropdown.
+
+*(Paste the Render URL here after the first deploy.)*
+
+## Run from source
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e "./backend[dev]"
-cp .env.example .env   # set GROQ_API_KEY (or OPENAI_API_KEY)
+cp .env.example .env   # set GROQ_API_KEY
 make test
 make api               # http://127.0.0.1:8000/health
 ```
@@ -26,23 +32,27 @@ npm --prefix web run dev   # http://127.0.0.1:5173
 
 Personas are a dropdown. Customers only see their orders. Staff see Ops Pulse.
 
-Docker:
+## Docker (optional, local only)
+
+For anyone who wants a single container after cloning. This is **not** how the public demo is hosted.
 
 ```bash
 docker build -t parcelpilot .
 docker run -p 8000:8000 -e GROQ_API_KEY=... parcelpilot
 ```
 
-## Host on Render
+Then open http://127.0.0.1:8000
 
-Yes — Render is the right host for this. One Docker service serves the UI and API on the same URL. Docker on Render needs the **Starter** plan (free instances cannot run Docker).
+## Deploy the public URL (maintainers)
 
-1. [dashboard.render.com](https://dashboard.render.com) → **New → Web Service** → `AyushSid28/ParcelPilotSupport`.
-2. Runtime **Docker**, health check `/health`.
-3. Env: `GROQ_API_KEY` (from your local `.env`). Optional `GROQ_MODEL=openai/gpt-oss-120b`.
-4. Deploy, then use `https://<name>.onrender.com` in the submission form.
+Host on Render as a **Python** web service, not a Docker runtime. Testers never need Docker.
 
-Or apply `render.yaml` via **New → Blueprint**. First boot can take a few minutes while the image builds.
+1. [dashboard.render.com](https://dashboard.render.com) → **New → Blueprint** (this `render.yaml`) or **Web Service** on `AyushSid28/ParcelPilotSupport`.
+2. Runtime **Python**. Build `bash scripts/render-build.sh`. Start `bash scripts/render-start.sh`. Health `/health`.
+3. Env: `GROQ_API_KEY` from local `.env`. Optional `GROQ_MODEL=openai/gpt-oss-120b`.
+4. Put the `https://….onrender.com` URL in this README and in the submission form.
+
+Free instances sleep when idle; the first request after a nap can take a minute.
 
 ## What to try
 
