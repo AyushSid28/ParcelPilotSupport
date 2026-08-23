@@ -12,7 +12,7 @@ Clock for every time question: **2026-08-16 11:00 Asia/Kolkata**.
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e "./backend[dev]"
-cp .env.example .env   # set OPENAI_API_KEY
+cp .env.example .env   # set GROQ_API_KEY (or OPENAI_API_KEY)
 make test
 make api               # http://127.0.0.1:8000/health
 ```
@@ -30,7 +30,7 @@ Docker:
 
 ```bash
 docker build -t parcelpilot .
-docker run -p 8000:8000 -e OPENAI_API_KEY=... parcelpilot
+docker run -p 8000:8000 -e GROQ_API_KEY=... parcelpilot
 ```
 
 ## What to try

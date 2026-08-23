@@ -30,22 +30,29 @@ If a tool returns not_found, say you cannot find that record.
 
 
 def _client() -> OpenAI:
-    return OpenAI(api_key=settings.openai_api_key)
+    kwargs = {"api_key": settings.llm_key}
+    if settings.llm_base_url:
+        kwargs["base_url"] = settings.llm_base_url
+    return OpenAI(**kwargs)
 
 
 def iter_chat(messages: list[dict], actor: Actor, conn) -> Iterator[dict]:
-    if not settings.openai_api_key:
-        yield {"event": "error", "data": {"message": "OPENAI_API_KEY is not set"}}
+    if not settings.llm_key:
+        yield {"event": "error", "data": {"message": "Set GROQ_API_KEY or OPENAI_API_KEY in .env"}}
         return
 
     client = _client()
     work = [{"role": "system", "content": SYSTEM}, *messages]
     for _ in range(8):
-        resp = client.chat.completions.create(
-            model=settings.openai_model,
-            messages=work,
-            tools=SCHEMAS,
-        )
+        try:
+            resp = client.chat.completions.create(
+                model=settings.llm_model,
+                messages=work,
+                tools=SCHEMAS,
+            )
+        except Exception as exc:
+            yield {"event": "error", "data": {"message": str(exc)}}
+            return
         choice = resp.choices[0]
         msg = choice.message
         if msg.tool_calls:

@@ -49,6 +49,8 @@ def health() -> dict:
         "orders": orders,
         "tickets": tickets,
         "chunks": chunks,
+        "llm": settings.llm_provider,
+        "model": settings.llm_model,
     }
 
 
