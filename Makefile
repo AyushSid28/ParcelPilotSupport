@@ -1,12 +1,12 @@
-.PHONY: dev test ingest
+.PHONY: test api web dev
 
-# Placeholders until backend/web land in later slices.
-
-dev:
-	@echo "dev servers land in a later slice"
+VENV := .venv/bin
 
 test:
-	@echo "tests land in a later slice"
+	$(VENV)/pytest backend/tests -q
 
-ingest:
-	@echo "document ingest lands in a later slice"
+api:
+	$(VENV)/uvicorn app.main:app --reload --app-dir backend --port 8000
+
+web:
+	npm --prefix web run dev

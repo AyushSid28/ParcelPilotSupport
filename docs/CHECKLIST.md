@@ -19,11 +19,11 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 
 ## B. Data plane
 
-- [ ] xlsx → SQLite: `accounts`, `orders`, `tickets`
-- [ ] Snapshot clock frozen at `2026-08-16 11:00 Asia/Kolkata`
-- [ ] Generated `escalations`, `ticket_updates`, `tasks`, `audit_log` tables
-- [ ] Boot logs row counts (4 / 6 / 7)
-- [ ] Tests: seed integrity (IDs ORD-1001… ORD-4001, TKT-450…505)
+- [x] xlsx → SQLite: `accounts`, `orders`, `tickets`
+- [x] Snapshot clock frozen at `2026-08-16 11:00 Asia/Kolkata`
+- [x] Generated `escalations`, `ticket_updates`, `tasks`, `audit_log` tables
+- [x] Boot logs row counts (4 / 6 / 7)
+- [x] Tests: seed integrity (IDs ORD-1001… ORD-4001, TKT-450…505)
 
 ---
 
@@ -196,7 +196,7 @@ SLA / severity:
 | Slice | Commit theme | Pushed |
 |---|---|---|
 | 0 | Repo skeleton + docs + source pack | [x] |
-| 1 | SQLite load + health | [ ] |
+| 1 | SQLite load + health | [x] |
 | 2 | Calculators + gold tests | [ ] |
 | 3 | Tenant ACL | [ ] |
 | 4 | Doc ingest + ranked retrieval | [ ] |
