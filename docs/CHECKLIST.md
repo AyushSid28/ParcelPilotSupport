@@ -13,7 +13,7 @@ Legend: `[ ]` not started · `[~]` in progress · `[x]` done
 - [x] `.env.example` lists `OPENAI_API_KEY`, model name, snapshot override
 - [x] Source PDFs + xlsx live under `data/source/` (tracked)
 - [x] README: what it is, personas, how to run locally, how to run tests
-- [ ] Incremental commits pushed per `PLAN.md` slices (not one dump)
+- [x] Incremental commits pushed per `PLAN.md` slices (not one dump)
 
 ---
 
@@ -61,24 +61,24 @@ SLA / severity:
 
 ## D. Access control
 
-- [ ] Customer header requires `account_id`
-- [ ] Customer ACCT-001 cannot load ORD-2001 / TKT-502 / LumenWorks agreement
-- [ ] Cross-tenant miss returns **NotFound**, not 403 with existence leak
-- [ ] Staff can load all accounts
-- [ ] Document search for customer excludes other agreements
-- [ ] ACL in repositories; prompt is not the enforcement layer
+- [x] Customer header requires `account_id`
+- [x] Customer ACCT-001 cannot load ORD-2001 / TKT-502 / LumenWorks agreement
+- [x] Cross-tenant miss returns **NotFound**, not 403 with existence leak
+- [x] Staff can load all accounts
+- [x] Document search for customer excludes other agreements
+- [x] ACL in repositories; prompt is not the enforcement layer
 - [ ] Confirm-action re-checks ACL
 
 ---
 
 ## E. Documents and retrieval
 
-- [ ] All six PDFs ingested with metadata (`status`, `authority`, `account_id`, `effective_from`)
-- [ ] v2 `deprecated`, authority 0, excluded from default search
-- [ ] Agreements authority 100, bound to ACCT-001 / ACCT-002
-- [ ] Chunks cite filename back to the UI
-- [ ] Query about current Enterprise P1 does not treat v2 “1 hour” as current policy
-- [ ] Historical ticket text is not in the policy index (tickets stay in SQL)
+- [x] All six PDFs ingested with metadata (`status`, `authority`, `account_id`, `effective_from`)
+- [x] v2 `deprecated`, authority 0, excluded from default search
+- [x] Agreements authority 100, bound to ACCT-001 / ACCT-002
+- [x] Chunks cite filename back to the UI
+- [x] Query about current Enterprise P1 does not treat v2 “1 hour” as current policy
+- [x] Historical ticket text is not in the policy index (tickets stay in SQL)
 
 ---
 
@@ -198,8 +198,8 @@ SLA / severity:
 | 0 | Repo skeleton + docs + source pack | [x] |
 | 1 | SQLite load + health | [x] |
 | 2 | Calculators + gold tests | [x] |
-| 3 | Tenant ACL | [ ] |
-| 4 | Doc ingest + ranked retrieval | [ ] |
+| 3 | Tenant ACL | [x] |
+| 4 | Doc ingest + ranked retrieval | [x] |
 | 5 | Read tools | [ ] |
 | 6 | Propose + confirm actions | [ ] |
 | 7 | LangGraph agent + SSE | [ ] |
