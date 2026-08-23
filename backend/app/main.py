@@ -17,7 +17,11 @@ app.add_middleware(
 
 @app.on_event("startup")
 def startup() -> None:
-    rebuild()
+    conn = rebuild()
+    from app.retrieval.ingest import persist
+
+    persist(conn)
+    conn.close()
 
 
 @app.get("/health")
