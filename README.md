@@ -1,45 +1,48 @@
 # ParcelPilot Support Copilot
 
-Grounded support copilot for [ParcelPilot](https://github.com/AyushSid28/ParcelPilotSupport) — tenant-scoped tools, contract-aware policy, and an internal ops pulse.
+Grounded support copilot for ParcelPilot — tenant-scoped tools, contract-aware policy, and an internal ops pulse.
 
-This is a take-home system for CalQuity: a **customer** chatbot and an **internal ops** chatbot over an intentionally messy policy pack (current vs deprecated policy, customer contracts that override SOP, historical tickets that can be wrong), plus **Ops Pulse** for proactive issue detection.
+Public repo: https://github.com/AyushSid28/ParcelPilotSupport
 
-## Status
+Clock for every time question: **2026-08-16 11:00 Asia/Kolkata**.
 
-Slice 0: repository skeleton, architecture, and source pack only. The API and UI are not in this commit.
-
-Design docs:
-
-- [Architecture](docs/ARCHITECTURE.md)
-- [Build plan](docs/PLAN.md)
-- [Checklist](docs/CHECKLIST.md)
-
-## Source pack
-
-Assessment documents live in `data/source/`:
-
-- Support Policy v3 (current) and v2 (deprecated)
-- Cancellation & Service Credit SOP v4
-- Product operations guide and known issues
-- Northstar and LumenWorks agreements
-- `ParcelPilot_Assessment_Data.xlsx` (accounts, orders, tickets)
-
-**System clock for all time questions:** `2026-08-16 11:00 Asia/Kolkata`
-
-## Personas (planned)
-
-Customers: Northstar Logistics, LumenWorks, Beacon Retail, Axis Labs  
-Staff: agent, CSM, ops lead (mocked headers; ACL enforced in the data layer)
-
-## Local run
-
-Not applicable until later slices. Planned:
+## Run locally
 
 ```bash
-cp .env.example .env   # add OPENAI_API_KEY
-make dev               # API :8000 + web :3000
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -e "./backend[dev]"
+cp .env.example .env   # set OPENAI_API_KEY
+make test
+make api               # http://127.0.0.1:8000/health
 ```
 
-## Repository
+In another terminal:
 
-Public GitHub: https://github.com/AyushSid28/ParcelPilotSupport
+```bash
+npm --prefix web install
+npm --prefix web run dev   # http://127.0.0.1:5173
+```
+
+Personas are a dropdown. Customers only see their orders. Staff see Ops Pulse.
+
+Docker:
+
+```bash
+docker build -t parcelpilot .
+docker run -p 8000:8000 -e OPENAI_API_KEY=... parcelpilot
+```
+
+## What to try
+
+- Northstar: cancel ORD-1001 (should be free; ignore TKT-450)
+- LumenWorks: credit on ORD-2002 (₹300, not ₹240)
+- Staff pulse: TKT-505 and TKT-501 SLA breaches
+- TKT-502: KI-208, not a 3,000-row plan cap
+
+## Docs
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Architecture note](docs/ARCHITECTURE_NOTE.md)
+- [Product note](docs/PRODUCT_NOTE.md)
+- [Demo script](demo/SCRIPT.md)
