@@ -1,16 +1,34 @@
 # ParcelPilot Support Copilot
 
-Grounded support copilot for ParcelPilot — tenant-scoped tools, contract-aware policy, and an internal ops pulse.
+ParcelPilot Support Copilot is a small grounded support app for a deliberately messy customer-support pack. It handles customer questions about orders, cancellations, pickup credits, and ticket SLAs while keeping customer data isolated and requiring confirmation before any action is queued.
 
-Public repo: https://github.com/AyushSid28/ParcelPilotSupport
+Live demo: [https://parcelpilotsupport.onrender.com](https://parcelpilotsupport.onrender.com)
 
-Clock for every time question: **2026-08-16 11:00 Asia/Kolkata**.
+Public repo: [https://github.com/AyushSid28/ParcelPilotSupport](https://github.com/AyushSid28/ParcelPilotSupport)
 
-## Try the hosted demo
+The assessment clock is fixed at **2026-08-16 11:00 Asia/Kolkata**, so SLA and pickup-delay answers are reproducible.
 
-No clone, no Docker. Open [https://parcelpilotsupport.onrender.com](https://parcelpilotsupport.onrender.com) and use the persona dropdown.
+## What It Does
 
-Free Render sleeps when idle; the first load after a nap can take about a minute.
+- Customers can ask about their own orders and tickets.
+- Staff can see cross-account support context and use Ops Pulse.
+- Cancellation fees, pickup credits, and SLA breaches are calculated in code.
+- Signed customer agreements override the generic SOP when they conflict.
+- Old tickets are treated as historical context, not policy authority.
+- Escalations and follow-up tasks are only queued after the user clicks Confirm.
+
+## Try It
+
+Open the [hosted demo](https://parcelpilotsupport.onrender.com) and use the persona dropdown.
+
+Render's free tier sleeps when idle, so the first load can take about a minute.
+
+Good demo paths:
+
+- Northstar: ask whether `ORD-1001` can be cancelled without a fee.
+- LumenWorks: ask about the missed-pickup credit for `ORD-2002`.
+- Staff: open Ops Pulse and inspect `TKT-505` or `TKT-501`.
+- LumenWorks: ask about `TKT-502` and the bulk CSV limit.
 
 ## Run from source
 
@@ -30,11 +48,11 @@ npm --prefix web install
 npm --prefix web run dev   # http://127.0.0.1:5173
 ```
 
-Personas are a dropdown. Customers only see their orders. Staff see Ops Pulse.
+The app uses the persona dropdown instead of real login. Customers only see their own account data; staff personas can see the broader queue.
 
 ## Docker (optional, local only)
 
-For anyone who wants a single container after cloning. This is **not** how the public demo is hosted.
+Docker is included for local testing. The public demo is hosted as a Python service on Render.
 
 ```bash
 docker build -t parcelpilot .
@@ -43,27 +61,29 @@ docker run -p 8000:8000 -e GROQ_API_KEY=... parcelpilot
 
 Then open http://127.0.0.1:8000
 
-## Deploy the public URL (maintainers)
+## Deployment
 
-Host on Render as a **Python** web service, not a Docker runtime. Testers never need Docker.
+The hosted demo is deployed on Render as a Python web service.
 
-1. [dashboard.render.com](https://dashboard.render.com) → **New → Blueprint** (this `render.yaml`) or **Web Service** on `AyushSid28/ParcelPilotSupport`.
-2. Runtime **Python**. Build `bash scripts/render-build.sh`. Start `bash scripts/render-start.sh`. Health `/health`.
-3. Env: `GROQ_API_KEY` from local `.env`. Optional `GROQ_MODEL=openai/gpt-oss-120b`.
-4. Live URL: [https://parcelpilotsupport.onrender.com](https://parcelpilotsupport.onrender.com)
+Build command:
 
-Free instances sleep when idle; the first request after a nap can take a minute.
+```bash
+bash scripts/render-build.sh
+```
 
-## What to try
+Start command:
 
-- Northstar: cancel ORD-1001 (should be free; ignore TKT-450)
-- LumenWorks: credit on ORD-2002 (₹300, not ₹240)
-- Staff pulse: TKT-505 and TKT-501 SLA breaches
-- TKT-502: KI-208, not a 3,000-row plan cap
+```bash
+bash scripts/render-start.sh
+```
+
+Required environment variable:
+
+```bash
+GROQ_API_KEY=...
+```
 
 ## Docs
 
 - [Architecture](docs/ARCHITECTURE.md)
-- [Architecture note](docs/ARCHITECTURE_NOTE.md)
 - [Product note](docs/PRODUCT_NOTE.md)
-- [Demo script](demo/SCRIPT.md)
