@@ -137,14 +137,29 @@ export default function App() {
   async function onConfirm() {
     if (!proposal) return;
     const out = await confirmAction(persona, proposal.proposal_id);
+    const title = proposal.payload?.title || proposal.action_type;
     setProposal(null);
-    setMessages((m) => [...m, { role: "assistant", content: `Confirmed. ${JSON.stringify(out)}` }]);
+    if (out?.error) {
+      setMessages((m) => [
+        ...m,
+        { role: "assistant", content: "I couldn't save that. Please try confirming again." },
+      ]);
+      return;
+    }
+    setMessages((m) => [
+      ...m,
+      {
+        role: "assistant",
+        content: `Done. I’ve logged “${title}” for the ops team.`,
+      },
+    ]);
   }
 
   async function onCancel() {
     if (!proposal) return;
     await cancelAction(persona, proposal.proposal_id);
     setProposal(null);
+    setMessages((m) => [...m, { role: "assistant", content: "Okay, I won’t create that." }]);
   }
 
   return (
@@ -245,16 +260,17 @@ export default function App() {
               {proposal && (
                 <div className="confirm">
                   <p>
-                    {proposal.action_type === "task"
-                      ? "This will create a follow-up task."
-                      : proposal.action_type === "escalation"
-                        ? "This will create an escalation."
+                    {proposal.payload?.title ||
+                      (proposal.action_type === "escalation"
+                        ? "Create an escalation"
                         : proposal.action_type === "ticket_update"
-                          ? "This will update the ticket."
-                          : `This will run ${proposal.action_type}.`}{" "}
-                    Nothing is written until you confirm.
+                          ? "Update the ticket"
+                          : "Create a follow-up task")}
                   </p>
-                  <pre>{JSON.stringify(proposal.payload, null, 2)}</pre>
+                  {proposal.payload?.related_id && (
+                    <p className="meta">Related: {proposal.payload.related_id}</p>
+                  )}
+                  <p className="meta">Nothing is written until you confirm.</p>
                   <button onClick={onConfirm}>Confirm</button>
                   <button className="ghost" onClick={onCancel}>
                     Cancel
