@@ -229,7 +229,16 @@ export default function App() {
               )}
               {proposal && (
                 <div className="confirm">
-                  <p>This will {proposal.action_type}. It has not been written yet.</p>
+                  <p>
+                    {proposal.action_type === "task"
+                      ? "This will create a follow-up task."
+                      : proposal.action_type === "escalation"
+                        ? "This will create an escalation."
+                        : proposal.action_type === "ticket_update"
+                          ? "This will update the ticket."
+                          : `This will run ${proposal.action_type}.`}{" "}
+                    Nothing is written until you confirm.
+                  </p>
                   <pre>{JSON.stringify(proposal.payload, null, 2)}</pre>
                   <button onClick={onConfirm}>Confirm</button>
                   <button className="ghost" onClick={onCancel}>
