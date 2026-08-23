@@ -47,26 +47,42 @@ export async function cancelAction(persona, id) {
   return res.json();
 }
 
+function parseBlock(block) {
+  const ev = (block.match(/^event: (.+)$/m) || [])[1];
+  const dataLines = [...block.matchAll(/^data: (.*)$/gm)].map((m) => m[1]);
+  if (!ev || !dataLines.length) return null;
+  return { event: ev, data: JSON.parse(dataLines.join("")) };
+}
+
 export async function* streamChat(persona, messages) {
   const res = await fetch("/chat", {
     method: "POST",
     headers: headersFor(persona),
     body: JSON.stringify({ messages }),
   });
+  if (!res.ok) {
+    const text = await res.text();
+    yield { event: "error", data: { message: text || res.statusText } };
+    return;
+  }
   const reader = res.body.getReader();
   const decoder = new TextDecoder();
   let buf = "";
   while (true) {
     const { value, done } = await reader.read();
-    if (done) break;
-    buf += decoder.decode(value, { stream: true });
+    buf += decoder.decode(value || new Uint8Array(), { stream: !done });
+    if (done) {
+      for (const block of buf.split("\n\n")) {
+        const parsed = parseBlock(block);
+        if (parsed) yield parsed;
+      }
+      break;
+    }
     const parts = buf.split("\n\n");
     buf = parts.pop() || "";
     for (const block of parts) {
-      const ev = (block.match(/^event: (.+)$/m) || [])[1];
-      const dataLine = (block.match(/^data: (.+)$/m) || [])[1];
-      if (!ev || !dataLine) continue;
-      yield { event: ev, data: JSON.parse(dataLine) };
+      const parsed = parseBlock(block);
+      if (parsed) yield parsed;
     }
   }
 }

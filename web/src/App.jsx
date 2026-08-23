@@ -43,7 +43,6 @@ export default function App() {
   const [tools, setTools] = useState([]);
   const [proposal, setProposal] = useState(null);
   const [error, setError] = useState("");
-  const [cites, setCites] = useState([]);
   const logRef = useRef(null);
 
   useEffect(() => {
@@ -59,7 +58,6 @@ export default function App() {
     setTools([]);
     setProposal(null);
     setError("");
-    setCites([]);
     getMe(persona).then(setMe);
     getOrders(persona).then((d) => setOrders(d.orders || []));
     getTickets(persona).then((d) => setTickets(d.tickets || []));
@@ -86,8 +84,8 @@ export default function App() {
     setBusy(true);
     setError("");
     setTools([]);
-    setCites([]);
     let final = "";
+    let sources = [];
     try {
       for await (const ev of streamChat(persona, next)) {
         if (ev.event === "tool_start") setTools((t) => [...t, { name: ev.data.name, state: "running" }]);
@@ -98,13 +96,17 @@ export default function App() {
             ...(result.policy_basis || []),
             ...((result.hits || []).map((h) => h.filename)),
           ].filter(Boolean);
-          if (extra.length) setCites((c) => [...new Set([...c, ...extra])]);
+          if (extra.length) {
+            sources = [...new Set([...sources, ...extra])];
+          }
         }
         if (ev.event === "proposal") setProposal(ev.data);
         if (ev.event === "final") final = ev.data.text;
         if (ev.event === "error") setError(ev.data.message);
       }
-      if (final) setMessages([...next, { role: "assistant", content: final }]);
+      if (final) {
+        setMessages([...next, { role: "assistant", content: final, sources }]);
+      }
     } catch (e) {
       setError(String(e));
     } finally {
@@ -207,11 +209,19 @@ export default function App() {
               )}
               {messages.map((m, i) => (
                 <article key={i} className={m.role}>
-                  <span>{m.role}</span>
+                  <span>{m.role === "user" ? "You" : "Answer"}</span>
                   <pre>{m.content}</pre>
+                  {m.sources?.length > 0 && (
+                    <p className="cites">
+                      <em>Sources</em>
+                      {m.sources.map((c) => (
+                        <span key={c}>{c.replace(/\.pdf$/i, "").replace(/_/g, " ")}</span>
+                      ))}
+                    </p>
+                  )}
                 </article>
               ))}
-              {tools.length > 0 && (
+              {busy && tools.length > 0 && (
                 <ol className="tools">
                   {tools.map((t, i) => (
                     <li key={i} data-state={t.state}>
@@ -219,13 +229,6 @@ export default function App() {
                     </li>
                   ))}
                 </ol>
-              )}
-              {cites.length > 0 && (
-                <p className="cites">
-                  {cites.map((c) => (
-                    <span key={c}>{c}</span>
-                  ))}
-                </p>
               )}
               {proposal && (
                 <div className="confirm">
